@@ -52,6 +52,7 @@ public class Star : MonoBehaviour, IPointerClickHandler
         RowIndex = row;
         ColIndex = col;
         transform.localPosition = new Vector3(RowIndex * 60, ColIndex * 60, 0);
+        UpdateStarBackgroundPosition();
     }
 
     public void RandomCreateStarType()
@@ -65,13 +66,21 @@ public class Star : MonoBehaviour, IPointerClickHandler
         StarBackground.transform.localPosition = Vector3.zero;
         string color = StarBackground.tag;
         starColor = (StarColor)Enum.Parse(typeof(StarColor), color);
-        StarBackground.GetComponent<Star>().ColIndex = ColIndex;
-        StarBackground.GetComponent<Star>().RowIndex = RowIndex;
         StarBackground.GetComponent<Star>().starColor = starColor;
+        UpdateStarBackgroundPosition();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         GameControlller.Ins.Select(this);
+    }
+
+    public void UpdateStarBackgroundPosition()
+    {
+        if (StarBackground != null)
+        {
+            StarBackground.GetComponent<Star>().ColIndex = ColIndex;
+            StarBackground.GetComponent<Star>().RowIndex = RowIndex;
+        }
     }
 }

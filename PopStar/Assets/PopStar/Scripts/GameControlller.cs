@@ -1,6 +1,8 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using Assets.PopStar.Scripts;
 
 public class GameControlller : MonoBehaviour
 {
@@ -63,9 +65,20 @@ public class GameControlller : MonoBehaviour
                         Star s = ((ArrayList)starList[i])[j] as Star;
                         if (SameColorStarList.Contains(s))
                         {
-                            ((ArrayList) starList[i])[j] = null;
+                            ((ArrayList)starList[i])[j] = null;
                             Destroy(s.gameObject);
                         }
+                    }
+                }
+                PositionVerticalChange();
+                Star temp = null;
+                for (int i = 0; i < rowNum; i++)
+                {
+                    temp = ((ArrayList)starList[i])[0] as Star;
+                    if (temp == null)
+                    {
+                        PositionHorizontalChange();
+                        break;
                     }
                 }
             }
@@ -164,7 +177,6 @@ public class GameControlller : MonoBehaviour
             return;
         }
         SameColorStarList.Add(starLeftSide);
-
         CheckAllSide(starLeftSide);
     }
 
@@ -175,9 +187,7 @@ public class GameControlller : MonoBehaviour
         {
             return;
         }
-
         checkedStars.Add(star);
-
         CheckUp(star);
         CheckDown(star);
         CheckLeft(star);
@@ -190,4 +200,84 @@ public class GameControlller : MonoBehaviour
         return checkedStars.Contains(star);
     }
 
+    //改变竖直位置
+    public void PositionVerticalChange()
+    {
+        ArrayList row = new ArrayList();
+        for (int i = 0; i < 9; i++)
+        {
+            ArrayList col = new ArrayList();
+            for (int j = 0; j < 10; j++)
+            {
+                col.Add(null);
+            }
+            row.Add(col);
+        }
+
+        for (int i = 0; i < rowNum; i++)
+        {
+            int index = 0;
+            for (int j = 0; j < colNum; j++)
+            {
+                Star s = (((ArrayList)starList[i])[j]) as Star;
+                if (s != null)
+                {
+                    ((ArrayList)row[i])[index] = s;
+                    index++;
+                }
+            }
+        }
+        starList = row;
+        for (int i = 0; i < rowNum; i++)
+        {
+            for (int j = 0; j < colNum; j++)
+            {
+                Star s = ((ArrayList)starList[i])[j] as Star;
+                if (s != null)
+                {
+                    s.UpdatePosition(i, j);
+                }
+            }
+        }
+    }
+
+    public void PositionHorizontalChange()
+    {
+        ArrayList row = new ArrayList();
+        for (int i = 0; i < 9; i++)
+        {
+            ArrayList col = new ArrayList();
+            for (int j = 0; j < 10; j++)
+            {
+                col.Add(null);
+            }
+            row.Add(col);
+        }
+
+        for (int i = 0; i < colNum; i++)
+        {
+            int index = 0;
+            for (int j = 0; j < rowNum; j++)
+            {
+                Star s = (((ArrayList)starList[j])[i]) as Star;
+                if (s != null)
+                {
+                    ((ArrayList)row[index])[i] = s;
+                    index++;
+                }
+            }
+        }
+        starList = row;
+        for (int i = 0; i < rowNum; i++)
+        {
+            for (int j = 0; j < colNum; j++)
+            {
+                Star s = ((ArrayList)starList[i])[j] as Star;
+                if (s != null)
+                {
+                    s.UpdatePosition(i, j);
+                }
+            }
+        }
+    }
 }
